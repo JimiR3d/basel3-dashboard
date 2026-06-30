@@ -93,6 +93,29 @@ st.markdown("""
     div[data-testid="stMetricLabel"] {
         color: #0A0F1E !important;
     }
+
+    .breakdown-card {
+        background: linear-gradient(135deg, #1a1f3e 0%, #0A0F1E 100%);
+        border-radius: 10px;
+        padding: 14px 20px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .breakdown-label {
+        color: #9CA3AF;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .breakdown-value {
+        color: #FFFFFF;
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -307,13 +330,22 @@ if all(col in processed.columns for col in ["cet1_capital", "additional_tier1", 
 
     with comp_col2:
         st.markdown("**Capital Breakdown (₦ millions)**")
-        st.metric("CET1 Capital", f"₦{latest['cet1_capital']:,.0f}M")
+
+        breakdown_items = [("CET1 Capital", latest["cet1_capital"])]
         if "additional_tier1" in latest:
-            st.metric("Additional Tier 1", f"₦{latest['additional_tier1']:,.0f}M")
+            breakdown_items.append(("Additional Tier 1", latest["additional_tier1"]))
         if "tier2_capital" in latest:
-            st.metric("Tier 2 Capital", f"₦{latest['tier2_capital']:,.0f}M")
-        st.metric("Total Capital", f"₦{latest['total_capital']:,.0f}M")
-        st.metric("Risk-Weighted Assets", f"₦{latest['risk_weighted_assets']:,.0f}M")
+            breakdown_items.append(("Tier 2 Capital", latest["tier2_capital"]))
+        breakdown_items.append(("Total Capital", latest["total_capital"]))
+        breakdown_items.append(("Risk-Weighted Assets", latest["risk_weighted_assets"]))
+
+        for label, value in breakdown_items:
+            st.markdown(f"""
+            <div class="breakdown-card">
+                <div class="breakdown-label">{label}</div>
+                <div class="breakdown-value">₦{value:,.0f}M</div>
+            </div>
+            """, unsafe_allow_html=True)
 
 
 # ── PDF Export ───────────────────────────────────────────────────────

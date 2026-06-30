@@ -88,6 +88,11 @@ st.markdown("""
         border-radius: 8px;
         padding: 16px;
     }
+
+    div[data-testid="stMetricValue"],
+    div[data-testid="stMetricLabel"] {
+        color: #0A0F1E !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
